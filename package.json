@@ -1,0 +1,18 @@
+{
+  "name": "react-native-template-cli",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Becky Wu <wwq220@gmail.com> (http://www.beckywu.me)",
+  "license": "ISC",
+  "dependencies": {
+    "clear": "^0.1.0",
+    "inquirer": "^6.2.1"
+  },
+  "bin": {
+    "react-native-template-cli": "./index.js"
+  }
+}
