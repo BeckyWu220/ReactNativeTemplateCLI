@@ -27,7 +27,7 @@ if (command === 'copy') {
 
         if (argv.type === 'Component' || argv.type === 'Reducer' || argv.type === 'Screen') {
             const copy = `RN${argv.type}Template`;
-            files.copyFilesToCurrentDirectory(`${__dirname}/templates`, argv.name, copy);
+            files.copyToCurrentDirectory(`${__dirname}/templates`, argv.name, copy);
         } else {
             console.log('Invalid Template Type.');
             console.log('Available Template Type: `Component`, `Reducer`, `Screen`.');
