@@ -10,7 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "clear": "^0.1.0",
-    "inquirer": "^6.2.1"
+    "global": "^4.3.2",
+    "inquirer": "^6.2.1",
+    "yargs": "^12.0.5"
   },
   "bin": {
     "react-native-template-cli": "./index.js"
