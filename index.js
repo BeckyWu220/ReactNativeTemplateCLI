@@ -74,7 +74,7 @@ if (command === 'copy') {
         
         // ./android/app/build.gradle replace android.defaultConfig.versionCode and versionName (version)
         console.log(files.getCurrentDirectory());
-        const buildGradlePath = `${files.getCurrentDirectory()}/app/build.gradle`;
+        const buildGradlePath = `${files.getCurrentDirectory()}/android/app/build.gradle`;
         var buildConfig = fs.readFileSync(buildGradlePath, 'utf8');
 
         console.log(typeof(buildConfig));
@@ -93,7 +93,7 @@ if (command === 'copy') {
     }
 
     console.log(files.getCurrentDirectory());
-    const commands = `./gradlew assembleDebug`
+    const commands = `cd android && ./gradlew assembleRelease`
     child = spawn(commands, { shell: true });
     child.stderr.on('data', function (data) {
         console.error(data.toString());
@@ -105,7 +105,7 @@ if (command === 'copy') {
         if (exitCode === 0) {
             console.log(chalk.green('Android build had been archived successfully!'));
             //Open the folder of the build
-            child = exec(`open ${files.getCurrentDirectory()}/app/build/outputs/apk`, function(err, stdout, stderr) {
+            child = exec(`open ${files.getCurrentDirectory()}/android/app/build/outputs/apk`, function(err, stdout, stderr) {
                 if (err) {
                     console.log('exe err:', err);
                 }
