@@ -68,21 +68,32 @@ if (command === 'copy') {
         return
     }
 
-    if (argv.version || argv.build) {
+    console.log('Replace Version to ',argv.versionNumber, typeof(argv.versionNumber), argv.buildNumber)
+
+    if (argv.versionNumber || argv.buildNumber) {
+        
         // ./android/app/build.gradle replace android.defaultConfig.versionCode and versionName (version)
-        // var buildConfig = fs.readFileSync(`${files.getCurrentDirectory()}/android/app/build.gradle`);
-        // buildConfig.replace(new RegExp('versionCode *'), `versionCode ${argv.version}`)
-        if (argv.version) {
+        console.log(files.getCurrentDirectory());
+        const buildGradlePath = `${files.getCurrentDirectory()}/app/build.gradle`;
+        var buildConfig = fs.readFileSync(buildGradlePath, 'utf8');
 
+        console.log(typeof(buildConfig));
+        
+        if (argv.versionNumber) {
+            buildConfig = buildConfig.replace(new RegExp('versionName(.*?)\\n'), `versionName "${argv.versionNumber}"\n`);
         }
-        if (argv.build) {
+        if (argv.buildNumber) {
+            console.log('Replace Build to ', argv.buildNumber)
+            buildConfig = buildConfig.replace(new RegExp('versionCode (.*?)\\n'), `versionCode ${argv.buildNumber}\n`)
+        }
 
-        }
+        fs.writeFileSync(buildGradlePath, buildConfig, 'utf8')
+        
+        console.log('Update versionName and versionCode successfully in app/build.gradle');
     }
 
-    
-
-    const commands = `cd android && ./gradlew assembleRelease`
+    console.log(files.getCurrentDirectory());
+    const commands = `./gradlew assembleDebug`
     child = spawn(commands, { shell: true });
     child.stderr.on('data', function (data) {
         console.error(data.toString());
@@ -94,7 +105,7 @@ if (command === 'copy') {
         if (exitCode === 0) {
             console.log(chalk.green('Android build had been archived successfully!'));
             //Open the folder of the build
-            child = exec(`open ${files.getCurrentDirectory()}`, function(err, stdout, stderr) {
+            child = exec(`open ${files.getCurrentDirectory()}/app/build/outputs/apk`, function(err, stdout, stderr) {
                 if (err) {
                     console.log('exe err:', err);
                 }
