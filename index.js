@@ -5,7 +5,7 @@ const clear = require('clear');
 const yargs = require('yargs');
 const exec = require('child_process').exec;
 const spawn = require('child_process').spawn;
-// const rename = require('react-native-rename');
+const fs = require('fs');
 
 const files = require('./lib/files');
 const commands = require('./lib/commands');
@@ -16,6 +16,7 @@ console.log('React Native Template CLI');
 const argv = yargs
     .command(commands.copy.name, commands.copy.describe, commands.copy.params)
     .command(commands.rename.name, commands.rename.describe, commands.rename.params)
+    .command(commands.archiveAndroid.name, commands.archiveAndroid.describe, commands.archiveAndroid.params)
     .help()
     .argv;
 
@@ -39,13 +40,6 @@ if (command === 'copy') {
         }
     }
 } else if (command === 'rename-project') {
-    // child = exec("cd templates", function(err, stdout, stderr) {
-    //     console.log('stdout:', stdout);
-    //     console.log('stderr:', stderr);
-    //     if (err) {
-    //         console.log('exe err:', err);
-    //     }
-    // });
     if (!argv.name) {
         console.log('Cannot rename the project without a name.');
         return
@@ -67,6 +61,48 @@ if (command === 'copy') {
         }
     });
 
+} else if (command === 'archive-android') {
+    
+    if (!argv.name) {
+        console.log('Cannot archive android build without a name.');
+        return
+    }
+
+    if (argv.version || argv.build) {
+        // ./android/app/build.gradle replace android.defaultConfig.versionCode and versionName (version)
+        // var buildConfig = fs.readFileSync(`${files.getCurrentDirectory()}/android/app/build.gradle`);
+        // buildConfig.replace(new RegExp('versionCode *'), `versionCode ${argv.version}`)
+        if (argv.version) {
+
+        }
+        if (argv.build) {
+
+        }
+    }
+
+    
+
+    const commands = `cd android && ./gradlew assembleRelease`
+    child = spawn(commands, { shell: true });
+    child.stderr.on('data', function (data) {
+        console.error(data.toString());
+    });
+    child.stdout.on('data', function (data) {
+        console.log(data.toString());
+    });
+    child.on('exit', function (exitCode) {
+        if (exitCode === 0) {
+            console.log(chalk.green('Android build had been archived successfully!'));
+            //Open the folder of the build
+            child = exec(`open ${files.getCurrentDirectory()}`, function(err, stdout, stderr) {
+                if (err) {
+                    console.log('exe err:', err);
+                }
+            });
+        } else {
+            console.log(chalk.red(command + ' exited with code: ') + exitCode);
+        }
+    });
 } else {
     console.log('Unrecognized Command! ');
     console.log('Please run `react-native-template-cli --help` to see the list of available commands.');
